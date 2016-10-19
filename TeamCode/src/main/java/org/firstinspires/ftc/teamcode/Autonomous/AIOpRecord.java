@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.robotcontroller.external;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Environment;
 import android.text.InputType;
-import android.util.JsonWriter;
 import android.widget.EditText;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -15,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
+import org.firstinspires.ftc.teamcode.Values;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -33,10 +33,7 @@ public class AIOpRecord extends OpMode
 {
     String fileName; // Name of the file to write to, set in init
 
-    /**
-     * This ArrayList will store all of the data that our robot will record
-     */
-    List<AutonomousData> data;
+    List<AutonomousHardware> data; // This ArrayList will store all of the data1 that our robot will record
 
     /**
      * Runs once OpMode is selected on the phone
@@ -66,18 +63,33 @@ public class AIOpRecord extends OpMode
                 })
                 .show(); // Show the user the alert
 
+        AlertDialog.Builder chooseAlliance = new AlertDialog.Builder(context);
+        chooseAlliance.setTitle("Which alliance are we?")
+                .setPositiveButton("Blue", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        fileName += "-BLUE";
+                    }
+                })
+                .setNegativeButton("Red", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        fileName += "-RED";
+                    }
+                }).show();
+
         for (String s : Values.HARDWARE)
         {
             String[] add = s.split("_");
             if (add[0].equals("MOTOR"))
             {
                 DcMotor motor = hardwareMap.dcMotor.get(add[1]);
-                data.add(new AutonomousData(add[0], add[1], motor));
+                data.add(new AutonomousHardware(add[0], add[1], motor));
             }
-            else if (add[0].equals("SERVO"))
+            else
             {
                 Servo servo = hardwareMap.servo.get(add[1]);
-                data.add(new AutonomousData(add[0], add[1], servo));
+                data.add(new AutonomousHardware(add[0], add[1], servo));
             }
         }
     }
@@ -100,11 +112,13 @@ public class AIOpRecord extends OpMode
     {
         if (time > .1) // We're recording values every .1 seconds
         {
-            for (AutonomousData ad : data)
+            for (AutonomousHardware ah: data)
             {
-                if (ad.isMotor) ad.AddValue(ad.motor.getCurrentPosition());
-                else ad.AddValue(ad.servo.getPosition());
+                if (ah.isMotor) ah.AddValue(ah.motor.getCurrentPosition());
+                else ah.AddValue(ah.servo.getPosition());
             }
+
+            resetStartTime();
         }
 
         // This is the same as TeleOp
@@ -144,14 +158,15 @@ public class AIOpRecord extends OpMode
     void WriteData(File f) throws IOException
     {
         Writer out = new BufferedWriter(new FileWriter(f));
-        for (AutonomousData ad : data)
+        out.write(Integer.toString(data.size())); // Number of recorded values
+        for (AutonomousHardware ah : data)
         {
-            out.append(Integer.toString(ad.dataValues.size()) + " ")
-                    .append(ad.hardwareType + "_")
-                    .append(ad.hardwareName + " ");
+            out.append(Integer.toString(ah.dataValues.size()) + " ") // Number of data1 points for current hardware
+                    .append(ah.hardwareType + "_")
+                    .append(ah.hardwareName + " ");
 
-            for (Double d : ad.dataValues)
-                out.append(Double.toString(d) + " ");
+            for (Double d : ah.dataValues)
+                out.append(Double.toString(d) + " "); // Data values
         }
         out.close();
     }

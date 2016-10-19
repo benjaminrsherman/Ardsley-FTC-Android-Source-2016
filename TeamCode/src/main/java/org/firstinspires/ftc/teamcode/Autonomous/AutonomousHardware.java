@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.robotcontroller.external;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Benjamin on 10/18/2016.
  */
-public class AutonomousData
+public class AutonomousHardware
 {
     public String hardwareType;
     public String hardwareName;
@@ -20,7 +20,7 @@ public class AutonomousData
 
     public List<Double> dataValues;
 
-    public AutonomousData(String hardwareType, String hardwareName, Servo servo)
+    public AutonomousHardware(String hardwareType, String hardwareName, Servo servo)
     {
         this.hardwareType = hardwareType;
         this.hardwareName = hardwareName;
@@ -29,7 +29,7 @@ public class AutonomousData
         dataValues = new ArrayList<>();
     }
 
-    public AutonomousData(String hardwareType, String hardwareName, DcMotor motor)
+    public AutonomousHardware(String hardwareType, String hardwareName, DcMotor motor)
     {
         this.hardwareType = hardwareType;
         this.hardwareName = hardwareName;
@@ -41,5 +41,16 @@ public class AutonomousData
     public void AddValue(double val)
     {
         dataValues.add(val);
+    }
+
+    public void SetValues(List<Double> data)
+    {
+        dataValues = data;
+    }
+
+    public void SetPosition(double val)
+    {
+        if (isMotor) motor.setTargetPosition((int)val);
+        else servo.setPosition(val);
     }
 }
