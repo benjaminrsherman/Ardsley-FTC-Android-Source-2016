@@ -28,18 +28,18 @@ import java.util.Scanner;
 @Autonomous(name = "Play Recording", group = "Record/PlayBack")
 public class AIOpPlay extends OpMode {
 
-    List<List<AutonomousHardware>> data; // This ArrayList will store all of the data sets that our robot will run from
+    List<List<Hardware>> data; // This ArrayList will store all of the data sets that our robot will run from
 
-    List<AutonomousHardware> CURRENTDATA;
+    List<Hardware> CURRENTDATA;
+
+    List<Hardware> SERVOS;
 
     int step;
     int dataSetIndex;
 
     // Variables used for the beacon
     ColorSensor colorSensorRight;
-    Servo servoRight;
     ColorSensor colorSensorLeft;
-    Servo servoLeft;
 
     boolean checkBeacon; // Should we check the beacon?
     int blueAlliance;
@@ -120,9 +120,14 @@ public class AIOpPlay extends OpMode {
 
         // Setup for beacon
         colorSensorRight = hardwareMap.colorSensor.get(Values.COLOR_SENSOR_RIGHT);
-        servoRight = hardwareMap.servo.get(Values.SERVO_RIGHT);
         colorSensorLeft = hardwareMap.colorSensor.get(Values.COLOR_SENSOR_LEFT);
-        servoLeft = hardwareMap.servo.get(Values.SERVO_LEFT);
+        for (String s : Values.SERVOS)
+        {
+            String[] sId = s.split("_");
+            SERVOS.add(new Hardware(sId[0],
+                                    sId[1],
+                                    hardwareMap.servo.get(sId[1])));
+        }
 
         step = 0;
     }
@@ -133,24 +138,24 @@ public class AIOpPlay extends OpMode {
         int numHardware = in.nextInt(); // Number of hardware devices to add
         in.nextLine();
 
-        List<AutonomousHardware> dataSet = new ArrayList<>();
+        List<Hardware> dataSet = new ArrayList<>();
 
         for (int i=0; i<numHardware; i++)
         {
             int numData = in.nextInt();
             String[] hardwareId = in.next().split("_"); // Separate the id into hardware type and name
-            AutonomousHardware ah;
+            Hardware ah;
 
             // Setup the piece of hardware
             if (hardwareId[0].equals("MOTOR"))
             {
                 DcMotor motor = hardwareMap.dcMotor.get(hardwareId[1]);
-                ah = new AutonomousHardware(hardwareId[0], hardwareId[1], motor);
+                ah = new Hardware(hardwareId[0], hardwareId[1], motor);
             }
             else
             {
                 Servo servo = hardwareMap.servo.get(hardwareId[1]);
-                ah = new AutonomousHardware(hardwareId[0], hardwareId[1], servo);
+                ah = new Hardware(hardwareId[0], hardwareId[1], servo);
             }
 
             List<Double> data = new ArrayList<>();
@@ -175,17 +180,17 @@ public class AIOpPlay extends OpMode {
     {
         if (time>.1 && !checkBeacon && step<CURRENTDATA.size())
         {
-            for (AutonomousHardware ah : CURRENTDATA) ah.SetPosition(ah.dataValues.get(step++)); // Sets each hardware piece to its respective position for this time and increments step
+            for (Hardware ah : CURRENTDATA) ah.SetPosition(ah.dataValues.get(step++)); // Sets each hardware piece to its respective position for this time and increments step
             if (step > CURRENTDATA.size()) // Executes once all the values in CURRENTDATA have been exhausted
             {
                 switch (CheckBeacon())
                 {
                     case 0:
-                        servoRight.setPosition(1);
+                        SERVOS.get(0).SetPosition(1);
                         break;
 
                     case 1:
-                        servoLeft.setPosition(1);
+                        SERVOS.get(1).SetPosition(1);
                         break;
 
                     default:
@@ -199,8 +204,8 @@ public class AIOpPlay extends OpMode {
 
         if (checkBeacon && time>Values.BEACON_SERVO_TIME)
         {
-            servoRight.setPosition(0);
-            servoLeft.setPosition(0);
+            SERVOS.get(0).SetPosition(0);
+            SERVOS.get(1).SetPosition(0);
 
             if (CURRENTDATA.equals(data.get(data.size()-1))) requestOpModeStop(); // We've finished running the recording
             else CURRENTDATA = data.get(++dataSetIndex); // Sets CURRENTDATA to the next data set

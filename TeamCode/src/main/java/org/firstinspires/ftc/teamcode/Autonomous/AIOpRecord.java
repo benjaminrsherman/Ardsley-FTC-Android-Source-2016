@@ -33,7 +33,7 @@ public class AIOpRecord extends OpMode
 {
     String fileName; // Name of the file to write to, set in init
 
-    List<AutonomousHardware> data; // This ArrayList will store all of the data1 that our robot will record
+    List<Hardware> data; // This ArrayList will store all of the data1 that our robot will record
 
     /**
      * Runs once OpMode is selected on the phone
@@ -78,30 +78,20 @@ public class AIOpRecord extends OpMode
                     }
                 }).show();
 
-        for (String s : Values.HARDWARE)
+        for (String s : Values.MOTORS)
         {
             String[] add = s.split("_");
             if (add[0].equals("MOTOR"))
             {
                 DcMotor motor = hardwareMap.dcMotor.get(add[1]);
-                data.add(new AutonomousHardware(add[0], add[1], motor));
+                data.add(new Hardware(add[0], add[1], motor));
             }
             else
             {
                 Servo servo = hardwareMap.servo.get(add[1]);
-                data.add(new AutonomousHardware(add[0], add[1], servo));
+                data.add(new Hardware(add[0], add[1], servo));
             }
         }
-    }
-
-    /**
-     * Runs once Start is clicked
-     * Use to setup variables that rely on the state of the robot and create initial conditions for motors/servos
-     */
-    @Override
-    public void start()
-    {
-
     }
 
     /**
@@ -112,7 +102,7 @@ public class AIOpRecord extends OpMode
     {
         if (time > .1) // We're recording values every .1 seconds
         {
-            for (AutonomousHardware ah: data)
+            for (Hardware ah: data)
             {
                 if (ah.isMotor) ah.AddValue(ah.motor.getCurrentPosition());
                 else ah.AddValue(ah.servo.getPosition());
@@ -159,7 +149,7 @@ public class AIOpRecord extends OpMode
     {
         Writer out = new BufferedWriter(new FileWriter(f));
         out.write(Integer.toString(data.size())); // Number of recorded values
-        for (AutonomousHardware ah : data)
+        for (Hardware ah : data)
         {
             out.append(Integer.toString(ah.dataValues.size()) + " ") // Number of data1 points for current hardware
                     .append(ah.hardwareType + "_")

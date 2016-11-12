@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Benjamin on 10/18/2016.
  */
-public class AutonomousHardware
+public class Hardware
 {
     public String hardwareType;
     public String hardwareName;
@@ -20,7 +20,7 @@ public class AutonomousHardware
 
     public List<Double> dataValues;
 
-    public AutonomousHardware(String hardwareType, String hardwareName, Servo servo)
+    public Hardware(String hardwareType, String hardwareName, Servo servo)
     {
         this.hardwareType = hardwareType;
         this.hardwareName = hardwareName;
@@ -29,7 +29,7 @@ public class AutonomousHardware
         dataValues = new ArrayList<>();
     }
 
-    public AutonomousHardware(String hardwareType, String hardwareName, DcMotor motor)
+    public Hardware(String hardwareType, String hardwareName, DcMotor motor)
     {
         this.hardwareType = hardwareType;
         this.hardwareName = hardwareName;
