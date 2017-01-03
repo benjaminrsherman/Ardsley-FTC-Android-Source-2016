@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomous;
+package org.firstinspires.ftc.teamcode;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -14,7 +14,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
-import org.firstinspires.ftc.teamcode.Values;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -111,7 +110,7 @@ public class AIOpRecord extends OpMode
             resetStartTime();
         }
 
-        // This is the same as TeleOp
+        // This is the same as DriverControl
         Movement();
     }
 

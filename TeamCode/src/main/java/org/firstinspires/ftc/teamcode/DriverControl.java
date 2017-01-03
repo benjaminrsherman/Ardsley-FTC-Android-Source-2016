@@ -1,10 +1,7 @@
-package org.firstinspires.ftc.teamcode.DriverControl;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.teamcode.Autonomous.Hardware;
-import org.firstinspires.ftc.teamcode.Values;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +10,8 @@ import java.util.List;
  * Created by Benjamin on 10/20/2016.
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Driver Control", group="TeleOp")
-public class TeleOp extends OpMode{
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Driver Control", group="DriverControl")
+public class DriverControl extends OpMode{
 
     List<Hardware> motors;
     List<Hardware> servos;
