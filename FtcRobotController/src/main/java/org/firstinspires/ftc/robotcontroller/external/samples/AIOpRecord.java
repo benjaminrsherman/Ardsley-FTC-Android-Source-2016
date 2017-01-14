@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.robotcontroller.external.samples;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -79,17 +79,13 @@ public class AIOpRecord extends OpMode
 
         for (String s : Values.MOTORS)
         {
-            String[] add = s.split("_");
-            if (add[0].equals("MOTOR"))
-            {
-                DcMotor motor = hardwareMap.dcMotor.get(add[1]);
-                data.add(new Hardware(add[0], add[1], motor));
-            }
-            else
-            {
-                Servo servo = hardwareMap.servo.get(add[1]);
-                data.add(new Hardware(add[0], add[1], servo));
-            }
+                DcMotor motor = hardwareMap.dcMotor.get(s);
+                data.add(new Hardware("MOTOR", s, motor));
+        }
+        for (String s : Values.SERVOS)
+        {
+            Servo servo = hardwareMap.servo.get(s);
+            data.add(new Hardware("SERVO", s, servo));
         }
     }
 
@@ -150,7 +146,7 @@ public class AIOpRecord extends OpMode
         out.write(Integer.toString(data.size())); // Number of recorded values
         for (Hardware ah : data)
         {
-            out.append(Integer.toString(ah.dataValues.size()) + " ") // Number of data1 points for current hardware
+            out.append(Integer.toString(ah.dataValues.size()) + " ") // Number of data points for current hardware
                     .append(ah.hardwareType + "_")
                     .append(ah.hardwareName + " ");
 

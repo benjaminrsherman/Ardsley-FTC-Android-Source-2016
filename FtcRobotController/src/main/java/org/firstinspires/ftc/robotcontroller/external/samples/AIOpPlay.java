@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.robotcontroller.external.samples;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -197,6 +197,7 @@ public class AIOpPlay extends OpMode {
                 }
                 checkBeacon = true;
                 step = 0;
+
             }
             resetStartTime();
         }
