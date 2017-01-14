@@ -75,7 +75,7 @@ public class AIOpPlay extends OpMode {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Set Filename")
-                .setMessage("What file should the values to the first beacon be loaded from? Don't include file extensions")
+                .setMessage("What file should the values be loaded from? Don't include file extensions")
                 .setView(input)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() // We only want a confirm button
                 {
@@ -98,7 +98,7 @@ public class AIOpPlay extends OpMode {
         final EditText i = new EditText(context);
         input.setInputType(InputType.TYPE_CLASS_TEXT); // Just a normal text field
 
-        AlertDialog.Builder b = new AlertDialog.Builder(context);
+        /*AlertDialog.Builder b = new AlertDialog.Builder(context);
         b.setTitle("Set Filename")
                 .setMessage("What file should the values to the second beacon be loaded from? Don't include file extensions")
                 .setView(i)
@@ -115,17 +115,16 @@ public class AIOpPlay extends OpMode {
                         }
                     }
                 })
-                .show(); // Show the user the alert
+                .show(); // Show the user the alert*/
 
         // Setup for beacon
         colorSensorRight = hardwareMap.colorSensor.get(Values.COLOR_SENSOR_RIGHT);
         colorSensorLeft = hardwareMap.colorSensor.get(Values.COLOR_SENSOR_LEFT);
         for (String s : Values.SERVOS)
         {
-            String[] sId = s.split("_");
-            SERVOS.add(new Hardware(sId[0],
-                                    sId[1],
-                                    hardwareMap.servo.get(sId[1])));
+            SERVOS.add(new Hardware("SERVO",
+                                    s,
+                                    hardwareMap.servo.get(s)));
         }
 
         step = 0;
@@ -177,10 +176,10 @@ public class AIOpPlay extends OpMode {
     @Override
     public void loop()
     {
-        if (time>.1 && !checkBeacon && step<CURRENTDATA.size())
+        if (time>.1 && /*!checkBeacon && */step<CURRENTDATA.size())
         {
             for (Hardware ah : CURRENTDATA) ah.SetPosition(ah.dataValues.get(step++)); // Sets each hardware piece to its respective position for this time and increments step
-            if (step > CURRENTDATA.size()) // Executes once all the values in CURRENTDATA have been exhausted
+            /*if (step > CURRENTDATA.size()) // Executes once all the values in CURRENTDATA have been exhausted
             {
                 switch (CheckBeacon())
                 {
@@ -198,11 +197,11 @@ public class AIOpPlay extends OpMode {
                 checkBeacon = true;
                 step = 0;
 
-            }
+            }*/
             resetStartTime();
         }
 
-        if (checkBeacon && time>Values.BEACON_SERVO_TIME)
+        /*if (checkBeacon && time>Values.BEACON_SERVO_TIME)
         {
             SERVOS.get(0).SetPosition(0);
             SERVOS.get(1).SetPosition(0);
@@ -212,7 +211,7 @@ public class AIOpPlay extends OpMode {
 
             checkBeacon = false;
             resetStartTime();
-        }
+        }*/
     }
 
     /**
